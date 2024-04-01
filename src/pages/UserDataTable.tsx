@@ -30,7 +30,7 @@ function UserDataTable() {
   }, []); // Fetch data on component mount
   */
 
-  const handleAction = (action, userId) => {
+  const handleAction = (action: string, userId: string) => {
     // Handle update and delete actions based on the selected option
     if (action === 'Update') {
       // Handle update logic for the specific user (e.g., navigate to edit page)

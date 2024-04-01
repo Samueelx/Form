@@ -6,7 +6,7 @@ import { Box, Typography } from '@mui/material';
 const LoginPage = (): React.JSX.Element => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  // const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,11 +20,11 @@ const LoginPage = (): React.JSX.Element => {
   return (
     <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center",flexDirection: "column", marginY: "4rem", width: "50vw", margin: "0 auto" }}>
       <Typography variant="h2" sx={{ fontSize: "2rem" }}>Login</Typography>
-      {errorMessage && (
+      {/* {errorMessage && (
         <Typography variant="body2" color="error">
           {errorMessage}
         </Typography>
-      )}
+      )} */}
       <form onSubmit={handleSubmit} style={{width: "50%"}}>
         <TextField
           label="Username"
