@@ -1,23 +1,70 @@
 import { Box, Typography, TextField, Button } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function App() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [username, setUsername] = useState('');
-  const [age, setAge] = useState('');
-  const [town, setTown] = useState('');
-  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [age, setAge] = useState("");
+  const [town, setTown] = useState("");
+  const [password, setPassword] = useState("");
+  const [gender, setGender] = useState("");
+  const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  }
+
+    const userData = {
+      firstName,
+      lastName,
+      email,
+      password,
+      age,
+      town,
+      gender,
+    };
+    console.log(userData);
+    /**Send data to the api */
+    // Inside handleSubmit:
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
+  
+      const data = await response.json();
+      console.log("data: ", data);
+  
+      if (response.ok) {
+        // Handle successful signup: clear fields, display success message, redirect, etc.
+        navigate("/login");
+      } else {
+        // Handle errors: display error messages from data.error
+      }
+    } catch (error) {
+      // Handle network errors or other issues
+    }
+  };
 
   return (
     <>
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center",flexDirection: "column", marginY: "4rem", width: "50vw", margin: "0 auto" }}>
-        <Typography variant="h2" sx={{ fontSize: "2rem" }}>Sign Up</Typography>
-        <form onSubmit={handleSubmit} style={{width: "50%"}}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          marginY: "4rem",
+          width: "50vw",
+          margin: "0 auto",
+        }}
+      >
+        <Typography variant="h2" sx={{ fontSize: "2rem" }}>
+          Sign Up
+        </Typography>
+        <form onSubmit={handleSubmit} style={{ width: "50%" }}>
           <TextField
             label="First Name"
             variant="outlined"
@@ -37,12 +84,12 @@ function App() {
             required
           />
           <TextField
-            label="Username"
+            label="Email"
             variant="outlined"
             margin="normal"
             fullWidth
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
           <TextField
@@ -65,6 +112,15 @@ function App() {
             required
           />
           <TextField
+            label="Gender"
+            variant="outlined"
+            margin="normal"
+            fullWidth
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            required
+          />
+          <TextField
             label="Password"
             variant="outlined"
             margin="normal"
@@ -74,7 +130,11 @@ function App() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <Button type="submit" variant="contained" sx={{ mt: 3, width: '100%' }}>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ mt: 3, width: "100%" }}
+          >
             Sign Up
           </Button>
         </form>
