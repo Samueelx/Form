@@ -31,26 +31,26 @@ function UserDataTable() {
   const { userID } = useParams();
   const jwtToken = localStorage.getItem("jwtToken");
 
-  // Function to simulate fetching user data (replace with your actual data fetching logic)
-  const fetchUsers = async () => {
-    const response = await fetch(
-      `http://localhost:8080/api/v1/users/${userID}`,
-      {
-        headers: {
-          Authorization: `${jwtToken}`,
-        },
-      }
-    ); // Replace with your API endpoint
-    const data = await response.json();
-    setUsers(data);
-  };
-
   console.log(users);
   console.log("User ID: ", userID);
 
   useEffect(() => {
+    // Function to simulate fetching user data (replace with your actual data fetching logic)
+    const fetchUsers = async () => {
+      const response = await fetch(
+        `http://localhost:8080/api/v1/users/${userID}`,
+        {
+          headers: {
+            Authorization: `${jwtToken}`,
+          },
+        }
+      ); // Replace with your API endpoint
+      const data = await response.json();
+      setUsers(data);
+    };
+
     fetchUsers();
-  }, [userID]); // Fetch data on component mount
+  }, [userID, jwtToken]); // Fetch data on component mount
 
   const handleAction = (action: string, userId: number) => {
     // Handle update and delete actions based on the selected option
@@ -68,17 +68,20 @@ function UserDataTable() {
   };
   const handleUpdateUser = async () => {
     const updatedUser = { ...users }; // Copy the user object
-  
+
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/users/${users.id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `${jwtToken}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedUser)
-      });
-  
+      const response = await fetch(
+        `http://localhost:8080/api/v1/users/${users.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `${jwtToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedUser),
+        }
+      );
+
       if (response.ok) {
         // Handle successful update:
         // - Clear edit mode (setIsEdit(false))
@@ -92,9 +95,10 @@ function UserDataTable() {
       console.error("Error sending update request:", error);
     }
   };
-  
 
-  const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFirstNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setUsers((prevUsers) => ({ ...prevUsers, firstName: event.target.value }));
   };
 
@@ -218,7 +222,11 @@ function UserDataTable() {
         </Table>
       </TableContainer>
       {updateStatus ? (
-        <Button variant="contained" onClick={handleUpdateUser} sx={{ margin: "1rem", float: "right" }}>
+        <Button
+          variant="contained"
+          onClick={handleUpdateUser}
+          sx={{ margin: "1rem", float: "right" }}
+        >
           Update
         </Button>
       ) : (

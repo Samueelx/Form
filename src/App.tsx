@@ -1,4 +1,4 @@
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { Box, Typography, TextField, Button, Link } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,7 @@ function App() {
   const [town, setTown] = useState("");
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,15 +28,15 @@ function App() {
     /**Send data to the api */
     // Inside handleSubmit:
     try {
-      const response = await fetch('http://localhost:8080/api/v1/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
+      const response = await fetch("http://localhost:8080/api/v1/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
       });
-  
+
       const data = await response.json();
       console.log("data: ", data);
-  
+
       if (response.ok) {
         // Handle successful signup: clear fields, display success message, redirect, etc.
         navigate("/login");
@@ -56,9 +56,10 @@ function App() {
           alignItems: "center",
           justifyContent: "center",
           flexDirection: "column",
-          marginY: "4rem",
+          marginY: "2rem",
           width: "50vw",
           margin: "0 auto",
+          gap: 0.5
         }}
       >
         <Typography variant="h2" sx={{ fontSize: "2rem" }}>
@@ -138,6 +139,14 @@ function App() {
             Sign Up
           </Button>
         </form>
+        <Box sx={{ mt: 2, display: "flex", justifyContent: "center" }}>
+          <Typography variant="body2">
+            Already have an account?{" "}
+            <Link component="button" variant="body2" onClick={() => navigate("/login")} underline="none" sx={{ color: "primary.main" }}>
+              Log In
+            </Link>
+          </Typography>
+        </Box>
       </Box>
     </>
   );

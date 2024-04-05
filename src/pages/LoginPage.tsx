@@ -65,7 +65,7 @@ const LoginPage = (): React.JSX.Element => {
       )} */}
       <form onSubmit={handleSubmit} style={{ width: "50%" }}>
         <TextField
-          label="Username"
+          label="Email"
           variant="outlined"
           margin="normal"
           fullWidth
