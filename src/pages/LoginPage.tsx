@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Link } from "@mui/material";
 
 const LoginPage = (): React.JSX.Element => {
   const [email, setEmail] = useState("");
@@ -10,12 +10,12 @@ const LoginPage = (): React.JSX.Element => {
   // const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // Handle login logic here (e.g., send data to server for authentication)
     // Inside handleSubmit:
     try {
-      const response = await fetch("http://localhost:8080/api/v1/login", {
+      const response = await fetch("https://form-api-68gd.onrender.com/api/v1/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,15 +25,14 @@ const LoginPage = (): React.JSX.Element => {
 
       // Handle response appropriately
       const data = await response.json();
-      console.log("data: ", data)
+      console.log("data: ", data);
       if (response.ok) {
         const jwtToken = data.token; // Assuming the token is under the "jwt" key
-        localStorage.setItem('jwtToken', jwtToken);
-        navigate(`/users/${data.userID}`)
+        localStorage.setItem("jwtToken", jwtToken);
+        navigate(`/users/${data.userID}`);
       } else {
         // Handle login errors: display error messages
       }
-      
     } catch (error) {
       // Handle any errors during API request
     }
@@ -83,6 +82,17 @@ const LoginPage = (): React.JSX.Element => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 1 }}>
+          <Link
+            component="button"
+            variant="body2"
+            underline="none"
+            onClick={() => navigate("/forgot-password")}
+            sx={{ color: "primary.main" }}
+          >
+            Forgot password?
+          </Link>
+        </Box>
         <Button type="submit" variant="contained" sx={{ mt: 3, width: "100%" }}>
           Login
         </Button>

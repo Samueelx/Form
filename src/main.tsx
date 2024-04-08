@@ -4,6 +4,7 @@ import App from "./App.tsx";
 import "./index.css";
 import LoginPage from "./pages/LoginPage.tsx"
 import UserDataTable from "./pages/UserDataTable.tsx";
+import ForgotPassord from "./pages/ForgotPassword.tsx"
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: `/users/:userID`,
     element: <UserDataTable/>
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassord />
   }
 ]);
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -31,6 +31,8 @@ function UserDataTable() {
   const { userID } = useParams();
   const jwtToken = localStorage.getItem("jwtToken");
 
+  const navigate = useNavigate();
+
   console.log(users);
   console.log("User ID: ", userID);
 
@@ -38,7 +40,7 @@ function UserDataTable() {
     // Function to simulate fetching user data (replace with your actual data fetching logic)
     const fetchUsers = async () => {
       const response = await fetch(
-        `http://localhost:8080/api/v1/users/${userID}`,
+        `https://form-api-68gd.onrender.com/api/v1/users/${userID}`,
         {
           headers: {
             Authorization: `${jwtToken}`,
@@ -62,6 +64,7 @@ function UserDataTable() {
     } else if (action === "Delete") {
       setUpdateStatus(false);
       setDeleteStatus(true);
+      handleDeleteUser(userId);
       // Handle delete logic for the specific user (e.g., send delete request to server)
       console.log("Delete user with ID:", userId);
     }
@@ -71,7 +74,7 @@ function UserDataTable() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/v1/users/${users.id}`,
+        `https://form-api-68gd.onrender.com/api/v1/users/${users.id}`,
         {
           method: "PUT",
           headers: {
@@ -87,6 +90,7 @@ function UserDataTable() {
         // - Clear edit mode (setIsEdit(false))
         // - Potentially fetch updated user data again
         console.log("User updated successfully!");
+        setUpdateStatus(false);
       } else {
         // Handle update errors
         console.error("Error updating user:", response.statusText);
@@ -95,6 +99,36 @@ function UserDataTable() {
       console.error("Error sending update request:", error);
     }
   };
+
+  const handleDeleteUser = async (userId: number) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      try {
+        const response = await fetch(
+          `https://form-api-68gd.onrender.com/api/v1/users/${userId}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: `${jwtToken}`,
+            },
+          }
+        );
+  
+        if (response.ok) {
+          console.log("User deleted successfully!");
+          // Clear user data after successful deletion (optional)
+          setUsers({} as User);
+          // You can also refetch the user data list here if applicable to your application logic
+          navigate("/login");
+
+        } else {
+          console.error("Error deleting user:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error sending delete request:", error);
+      }
+    }
+  };
+  
 
   const handleFirstNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -212,7 +246,7 @@ function UserDataTable() {
                   onChange={(e) => handleAction(e.target.value, users.id)}
                   fullWidth
                 >
-                  <MenuItem value="">None</MenuItem>
+                  <MenuItem value="None">None</MenuItem>
                   <MenuItem value="Update">Update</MenuItem>
                   <MenuItem value="Delete">Delete</MenuItem>
                 </Select>
