@@ -3,25 +3,31 @@ import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Box, Typography, Link } from "@mui/material";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const LoginPage = (): React.JSX.Element => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoading(true);
     // Handle login logic here (e.g., send data to server for authentication)
     // Inside handleSubmit:
     try {
-      const response = await fetch("https://form-api-68gd.onrender.com/api/v1/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        "https://form-api-68gd.onrender.com/api/v1/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       // Handle response appropriately
       const data = await response.json();
@@ -93,9 +99,19 @@ const LoginPage = (): React.JSX.Element => {
             Forgot password?
           </Link>
         </Box>
-        <Button type="submit" variant="contained" sx={{ mt: 3, width: "100%" }}>
-          Login
-        </Button>
+        {loading ? (
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CircularProgress size="2rem" />
+          </Box>
+        ) : (
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ mt: 3, width: "100%" }}
+          >
+            Login
+          </Button>
+        )}
       </form>
     </Box>
   );
